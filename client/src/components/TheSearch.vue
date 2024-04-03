@@ -1,15 +1,45 @@
 <template>
-    <input type="text" placeholder="Enter the game">
+    <input v-model="inputValue" type="text" placeholder="Enter the game" @keydown.enter="onSearch">
 </template>
 
 <script>
-    export default {
-        
+
+import { useStore } from 'vuex'
+
+// Import vue functions
+import { ref } from 'vue'
+import { watch } from 'vue'
+
+export default {
+
+    setup(props, { emit }) {
+
+        // Store initialization
+        const store = useStore()
+
+        let inputValue = ref('')
+
+        watch(inputValue, (newValue) => {
+            if (newValue) return emit('onSearch', true)
+            emit('onSearch', false)
+        })
+
+        const onSearch = () => {
+            emit('searched', {
+                search : inputValue.value
+            })
+        }
+
+        return {
+            inputValue,
+            onSearch,
+            store
+        }
     }
+}
 </script>
 
 <style scoped>
-
 input {
     font-family: 'Trueno';
     width: 85vw;
@@ -24,6 +54,4 @@ input {
     box-sizing: border-box;
     margin-top: 2rem;
 }
-
-
 </style>
