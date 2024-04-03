@@ -1,13 +1,13 @@
 <template>
     <div class="card-container">
         <div class="card-image">
-            <img src="https://media.rawg.io/media/games/20a/20aa03a10cda45239fe22d035c0ebe64.jpg" alt="">
+            <img :src="imageUrl" alt="Game image">
         </div>
         <div class="card-bottom">
             <div class="card-informations">
-                <p>Grand Thef Auto 5</p>
+                <slot name="game-name"></slot>
                 <img src="../assets/img/icons/star-icon.svg" alt="icon start">
-                <span>4.5</span>
+                <slot name="game-rate"></slot>
             </div>
             <img class="card-button" src="../assets/img/icons/button-icon.svg" alt="">
         </div>
@@ -16,11 +16,19 @@
 
 <script>
 export default {
+    props: {
+        imageUrl: {
+            String
+        }
+    },
 
+    setup() {
+     return    
+    }
 }
 </script>
 
-<style scoped>
+<style>
 .card-container {
     background-color: #0E161F;
     width: 17rem;
@@ -58,10 +66,10 @@ export default {
     margin-left: 1.5rem;
 }
 
-.card-informations p {
+.card-informations .game-name {
     margin-right: 1rem;
     max-width: 8rem;
-    word-wrap: break-word
+    word-wrap: break-word;
 }
 
 .card-informations img {
@@ -69,7 +77,7 @@ export default {
     height: 1rem;
 }
 
-.card-informations span {
+.card-informations .game-rate {
     color: #FFCA4B;
     margin-left: 0.4rem;
 }
