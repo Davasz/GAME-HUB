@@ -14,7 +14,8 @@ export default createStore({
       shooter: [],
       casual: [],
       puzzle: [],
-      search: []
+      search: [],
+      gameSelected: []
     }
   },
   getters: {
@@ -42,12 +43,15 @@ export default createStore({
           state.games.search.push(element)
         })
       }
+    },
+
+    storeSelectedGame(state, data) {
+      state.games.gameSelected = []
+      state.games.gameSelected.push(data)
     }
   },
   actions: {
     async storeTopGames({ commit }) {
-
-
       try {
         const response = await axios.get(`https://api.rawg.io/api/games?key=${API_KEY}&page_size=10`).then(e => e.data.results)
         commit('storeTopGames', response)
@@ -59,7 +63,7 @@ export default createStore({
     async storeRecomendedGames({ commit }) {
 
       try {
-        const response = await axios.get(`https://api.rawg.io/api/games?key=${API_KEY}&page_size=10&page=2`).then(e => e.data.results)
+        const response = await axios.get(`https://api.rawg.io/api/games?key=${API_KEY}&page_size=12&page=2`).then(e => e.data.results)
         commit('storeRecomendedGames', response)
       } catch (error) {
         console.log(error)
@@ -71,10 +75,9 @@ export default createStore({
       let query = ''
 
       if (data.type == 'genres') {
-        query = `https://api.rawg.io/api/games?key=${API_KEY}&page_size=10&genres=${data.genres}`
+        query = `https://api.rawg.io/api/games?key=${API_KEY}&page_size=12&genres=${data.genres}`
       } else {
-        console.log(data.search)
-        query = `https://api.rawg.io/api/games?key=${API_KEY}&page_size=10&search=${data.search}`
+        query = `https://api.rawg.io/api/games?key=${API_KEY}&page_size=12&search=${data.search}`
       }
 
       try {
@@ -83,6 +86,15 @@ export default createStore({
           response,
           data
         })
+      } catch (error) {
+        console.log(error)
+      }
+    },
+
+    async getSelectedGame({ commit }, data) {
+      try {
+        const response = await axios.get(`https://api.rawg.io/api/games/${data}?key=9bd59e06c3c54bebb78dd73797d56178&page_size=10`).then(e => e.data)
+        commit('storeSelectedGame', response)
       } catch (error) {
         console.log(error)
       }
