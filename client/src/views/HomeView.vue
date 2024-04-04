@@ -21,7 +21,7 @@
 
       <div class="container">
         <div class="cards">
-          <TopGamesCard v-for="(game, index) in store.state.topGames" :key="index" :imageUrl="game.background_image">
+          <TopGamesCard v-for="(game, index) in store.state.topGames" :key="index" :imageUrl="game.background_image" @redirectGame="redirectGame(game.slug)">
 
             <template v-slot:game-name>
               <p class="game-name">{{ game.name }}</p>
@@ -39,24 +39,30 @@
     <section v-if="isOnSearchGender">
       <h1 class="tittle-medium">{{ gameTypeTittle }} Games</h1>
 
-      <GameCard v-for="(game, index) in gameStateLocal" :key="index" :imageUrl="game.background_image">
 
-        <template v-slot:card-game-name>
-          <p class="card-game-name">{{ game.name }}</p>
-        </template>
-        <template v-slot:card-game-rate>
-          <span class="card-game-rate">{{ game.rating }}</span>
-        </template>
+      <div class="small-cards-container">
+        <div class="small-game-cards">
 
-        <template v-slot:card-game-plataform-images>
-          <img v-if="verifyPlataform(game.parent_platforms, 3)" src="../assets/img/icons/xbox-icon.svg"
-            alt="Plataform icon">
-          <img v-if="verifyPlataform(game.parent_platforms, 2)" src="../assets/img/icons/ps-icon.svg"
-            alt="Plataform icon">
-          <img v-if="verifyPlataform(game.parent_platforms, 1)" src="../assets/img/icons/win-icon.svg"
-            alt="Plataform icon">
-        </template>
-      </GameCard>
+          <GameCard v-for="(game, index) in gameStateLocal" :key="index" :imageUrl="game.background_image" @redirectGame="redirectGame(game.slug)">
+            <template v-slot:card-game-name>
+              <p class="card-game-name">{{ game.name }}</p>
+            </template>
+            <template v-slot:card-game-rate>
+              <span class="card-game-rate">{{ game.rating }}</span>
+            </template>
+
+            <template v-slot:card-game-plataform-images>
+              <img v-if="verifyPlataform(game.parent_platforms, 3)" src="../assets/img/icons/xbox-icon.svg"
+                alt="Plataform icon">
+              <img v-if="verifyPlataform(game.parent_platforms, 2)" src="../assets/img/icons/ps-icon.svg"
+                alt="Plataform icon">
+              <img v-if="verifyPlataform(game.parent_platforms, 1)" src="../assets/img/icons/win-icon.svg"
+                alt="Plataform icon">
+            </template>
+          </GameCard>
+
+        </div>
+      </div>
     </section>
 
   </main>
@@ -73,6 +79,8 @@ import GameCard from '../components/GameCard.vue'
 import { useStore } from 'vuex'
 import { ref } from 'vue'
 
+import { useRouter } from 'vue-router'
+
 export default {
   name: 'HomeView',
   components: {
@@ -84,6 +92,8 @@ export default {
   setup() {
     // Store initialization
     const store = useStore()
+
+    const router = useRouter()
 
     // Variables
     let isOnSearch = ref(false)
@@ -137,7 +147,7 @@ export default {
       if (genres == 'all') {
         isOnSearch.value = false
         gameTypeTittle.value = 'Recomended'
-        gameStateLocal.value = store.state.recomendedGames
+        gameStateLocal.value = store.state.recomendedGames 
         return
       }
 
@@ -152,7 +162,6 @@ export default {
 
       removeAnimation()
       isOnSearchGender.value = true
-
       gameStateLocal.value = store.state.games[genres]
       gameTypeTittle.value = genres.charAt(0).toUpperCase() + genres.slice(1)
     }
@@ -175,6 +184,10 @@ export default {
       gameTypeTittle.value = 'Searched'
     }
 
+    const redirectGame = (gameSlug) => {
+      router.replace(`/game/${gameSlug}`)
+    }
+
     return {
       store,
       verifyPlataform,
@@ -185,7 +198,8 @@ export default {
       gameStateLocal,
       isOnSearchGender,
       showAnimation,
-      searched
+      searched,
+      redirectGame
     }
   }
 }
@@ -195,7 +209,7 @@ export default {
 main {
   display: flex;
   flex-direction: column;
-  margin-left: 2rem;
+  margin-left: 5vw;
   margin-top: 2rem;
   color: #ffffff;
   font-family: 'Trueno';
@@ -232,7 +246,6 @@ main {
 .container {
   overflow-x: scroll;
   scrollbar-width: none;
-  -ms-overflow-style: none;
 }
 
 .cards {
@@ -242,5 +255,22 @@ main {
 .loading-animation {
   margin: auto;
   margin-top: 7rem;
+}
+
+@media (min-width: 780px) {
+
+
+  .small-game-cards {
+    display: inline-flex;
+    justify-content: center;
+    width: 90vw;
+    flex-wrap: wrap;
+  }
+
+  .container {
+    overflow-x: scroll;
+    scrollbar-width: auto;
+  }
+
 }
 </style>
