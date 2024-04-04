@@ -9,7 +9,7 @@
                 <img src="../assets/img/icons/star-icon.svg" alt="icon start">
                 <slot name="game-rate"></slot>
             </div>
-            <img class="card-button" src="../assets/img/icons/button-icon.svg" alt="">
+            <img @click="redirectGame" class="card-button" src="../assets/img/icons/button-icon.svg" alt="">
         </div>
     </div>
 </template>
@@ -22,8 +22,15 @@ export default {
         }
     },
 
-    setup() {
-     return    
+    setup(props, { emit }) {
+
+        const redirectGame = () => {
+            emit('redirectGame')
+        }
+
+        return {
+            redirectGame
+        }
     }
 }
 </script>
@@ -86,5 +93,9 @@ export default {
     width: 2rem;
     height: 2rem;
     margin-left: 1rem;
+}
+
+.card-button {
+    cursor: pointer;
 }
 </style>

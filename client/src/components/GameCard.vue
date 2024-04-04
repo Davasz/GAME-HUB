@@ -13,11 +13,14 @@
                 <slot name="card-game-plataform-images"></slot>
             </div>
         </div>
-        <img class="card-game-button" src="../assets/img/icons/button-icon.svg" alt="">
+        <img @click="redirectGame" class="card-game-button" src="../assets/img/icons/button-icon.svg" alt="icon go">
     </div>
 </template>
 
 <script>
+
+
+
 export default {
     props: {
         imageUrl: {
@@ -25,8 +28,15 @@ export default {
         }
     },
 
-    setup() {
-        return
+    setup(props, { emit }) {
+
+        const redirectGame = () => {
+            emit('redirectGame')
+        }
+
+        return {
+            redirectGame
+        }
     }
 }
 </script>
@@ -83,5 +93,16 @@ export default {
 
 .card-game-plataforms img {
     margin-right: 0.4rem;
+}
+
+.card-game-button {
+    cursor: pointer;
+}
+
+@media (min-width: 780px) {
+ .card-game-conteiner {
+    width: 30%;
+    margin-right: 1rem;
+ } 
 }
 </style>
