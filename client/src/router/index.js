@@ -1,16 +1,22 @@
-import { createRouter, createWebHashHistory } from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router'
 
 const routes = [
   {
     path: '/',
     name: 'home',
   
-    component: () => import(/* webpackChunkName: "about" */ '../views/HomeView.vue')
+    component: () => import('../views/HomeView.vue')
+  },
+  {
+    path: '/game/:slug',
+    name: 'game',
+  
+    component: () => import('../views/GameView.vue')
   }
 ]
 
 const router = createRouter({
-  history: createWebHashHistory(),
+  history: createWebHistory(),
   routes
 })
 
