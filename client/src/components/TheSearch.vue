@@ -4,6 +4,7 @@
 
 <script>
 
+// Import store
 import { useStore } from 'vuex'
 
 // Import vue functions
@@ -17,19 +18,24 @@ export default {
         // Store initialization
         const store = useStore()
 
+        // Reactive input value
         let inputValue = ref('')
 
+        // Listening for input
         watch(inputValue, (newValue) => {
+            // While has a new value, emit the search state to the father
             if (newValue) return emit('onSearch', true)
             emit('onSearch', false)
         })
 
+        // Emits an event to the father when the enter key is clicked
         const onSearch = () => {
             emit('searched', {
                 search : inputValue.value
             })
         }
 
+        // Returning variables
         return {
             inputValue,
             onSearch,
@@ -40,6 +46,7 @@ export default {
 </script>
 
 <style scoped>
+/* Mobile First */
 input {
     font-family: 'Trueno';
     width: 85vw;

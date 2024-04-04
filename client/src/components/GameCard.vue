@@ -30,10 +30,12 @@ export default {
 
     setup(props, { emit }) {
 
+        // Emits an event to the father when the button is clicked
         const redirectGame = () => {
             emit('redirectGame')
         }
 
+        // Returning variables
         return {
             redirectGame
         }
@@ -42,6 +44,7 @@ export default {
 </script>
 
 <style>
+/* Mobile First */
 .card-game-conteiner {
     display: flex;
     align-items: center;
@@ -100,9 +103,9 @@ export default {
 }
 
 @media (min-width: 780px) {
- .card-game-conteiner {
-    width: 30%;
-    margin-right: 1rem;
- } 
+    .card-game-conteiner {
+        width: 30%;
+        margin-right: 1rem;
+    }
 }
 </style>

@@ -24,10 +24,12 @@ export default {
 
     setup(props, { emit }) {
 
+        // Emits an event to the father when the button is clicked
         const redirectGame = () => {
             emit('redirectGame')
         }
 
+        // Returning variables
         return {
             redirectGame
         }
@@ -36,6 +38,7 @@ export default {
 </script>
 
 <style>
+/* Mobile First */
 .card-container {
     background-color: #0E161F;
     width: 17rem;

@@ -46,7 +46,7 @@
                 </div>
                 <div class="info-right">
                     <h1>Plataforms</h1>
-                    <p>{{ plataforms }}</p>
+                    <p>{{ plataformText }}</p>
                 </div>
                 <div class="info">
                     <h1>Website</h1>
@@ -59,26 +59,33 @@
 
 <script>
 
+// Import store
+import { useStore } from 'vuex'
+
+// Import vue functions
 import { ref } from 'vue'
 
-import { useRoute } from 'vue-router';
-import { useStore } from 'vuex';
+// Import router
+import { useRoute } from 'vue-router'
 
+// Date format lib
 import { format } from 'date-fns';
 
 export default {
     setup() {
-
+        // Store initialization
         const store = useStore()
 
+        // Router initialization
         const route = useRoute()
 
-        let developers = ref()
-        let genre = ref()
-        let esrb = ref()
-        let site = ref()
-        let plataforms = ref()
-        let date = ref()
+        // Variables
+        let developers = ref('-')
+        let genre = ref('-')
+        let esrb = ref('-')
+        let site = ref('-')
+        let plataformText = ref('-')
+        let date = ref('-')
         let showWin = ref()
         let showPs = ref()
         let showXbox = ref()
@@ -87,37 +94,53 @@ export default {
 
         })
 
+        // Methods
+
+        const alterVariables = (variable, newValue) => {
+            variable.value = newValue
+        }
+
+        // Convert (yyyy-mm-dd) -> (MMM-dd- yyyy)
         const formatDate = (dateString) => {
             const formattedDate = format(new Date(dateString), 'MMM dd, yyyy');
             return formattedDate.toUpperCase();
         };
 
         const getGameInformations = async () => {
+            // Select game according to slug route param
             await store.dispatch('getSelectedGame', route.params.slug)
+
             gameInformations.value = store.state.games.gameSelected[0]
-            date.value = formatDate(gameInformations.value.released)
+
+            alterVariables(date, formatDate(gameInformations.value.released))
+
+            // Apper plataforms (pc: 3, ps: 2, xbox: 1)
             let plataforms = gameInformations.value.parent_platforms
             for (let i = 0; i < plataforms.length; i++) {
                 if (plataforms[i].platform.id == 3) {
-                    showWin.value = true
+                    alterVariables(showWin, true)
                 } else if (plataforms[i].platform.id == 2) {
-                    showPs.value = true
+                    alterVariables(showPs, true)
                 } else if (plataforms[i].platform.id == 1) {
-                    showXbox.value = true
+                    alterVariables(showXbox, true)
                 }
             }
-            developers.value = gameInformations.value.developers[0].name
-            genre.value = gameInformations.value.genres[0].name
-            esrb.value = gameInformations.value.esrb_rating.name
-            site.value = gameInformations.value.website
-            plataforms.value = ''
-            gameInformations.value.platforms.forEach(element => {
-                plataforms.value += element.platform.name + " "
+
+            alterVariables(developers, gameInformations.value.developers[0]?.name ?? '-')
+            alterVariables(genre, gameInformations.value.genres[0]?.name ?? '-')
+            alterVariables(esrb, gameInformations.value.esrb_rating?.name ?? '-')
+            alterVariables(site, gameInformations.value?.website ?? '-')
+            alterVariables(plataformText, '')
+
+            gameInformations.value.platforms.forEach(game => {
+                plataformText.value += game.platform.name + " "
             });
         }
 
+        // Render game informations
         getGameInformations()
 
+        // Returning variables
         return {
             route,
             store,
@@ -127,7 +150,7 @@ export default {
             genre,
             esrb,
             site,
-            plataforms,
+            plataformText,
             date,
             showWin,
             showPs,
@@ -139,6 +162,7 @@ export default {
 </script>
 
 <style scoped>
+/* Mobile First */
 main {
     display: flex;
     flex-direction: column;
@@ -225,6 +249,7 @@ h1 {
     flex-direction: column;
     width: 90%;
     margin-top: 2rem;
+    margin-bottom: 10rem;
 }
 
 .about h1 {
