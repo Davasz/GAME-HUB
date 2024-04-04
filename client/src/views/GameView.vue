@@ -1,5 +1,7 @@
 <template>
     <main>
+        <img v-if="showAnimation" class="loading-animation" src="../assets/img/animation/loading-animation.svg"
+            alt="loading animation">
         <section class="header">
             <div class="head">
                 <div class="date"><span>{{ date }}</span></div>
@@ -9,6 +11,7 @@
             </div>
 
             <h1>{{ gameInformations.name }}</h1>
+
 
             <div class="game-img">
                 <img :src="gameInformations.background_image" alt="Game image">
@@ -50,7 +53,7 @@
                 </div>
                 <div class="info">
                     <h1>Website</h1>
-                    <a :href="site">{{ site }}</a>
+                    <a target="_blank" :href="site">{{ site }}</a>
                 </div>
             </div>
         </section>
@@ -80,6 +83,7 @@ export default {
         const route = useRoute()
 
         // Variables
+        let showAnimation = ref(false)
         let developers = ref('-')
         let genre = ref('-')
         let esrb = ref('-')
@@ -96,6 +100,15 @@ export default {
 
         // Methods
 
+        // Animation
+        const removeAnimation = () => {
+            showAnimation.value = false
+        }
+
+        const apperAnimation = () => {
+            showAnimation.value = true
+        }
+
         const alterVariables = (variable, newValue) => {
             variable.value = newValue
         }
@@ -107,8 +120,11 @@ export default {
         };
 
         const getGameInformations = async () => {
+            apperAnimation()
             // Select game according to slug route param
             await store.dispatch('getSelectedGame', route.params.slug)
+
+            removeAnimation()
 
             gameInformations.value = store.state.games.gameSelected[0]
 
@@ -144,6 +160,7 @@ export default {
         return {
             route,
             store,
+            showAnimation,
             getGameInformations,
             gameInformations,
             developers,
@@ -168,6 +185,7 @@ main {
     flex-direction: column;
     width: 100%;
     align-items: center;
+    justify-content: center;
     margin-top: 2rem;
     color: #ffffff;
     font-family: 'Trueno';
