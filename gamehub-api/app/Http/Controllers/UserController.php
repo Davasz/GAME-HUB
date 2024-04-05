@@ -2,36 +2,60 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Http\Requests\CreateUpdateUserRequest;
+use App\Http\Resources\UserResource;
 use App\Models\User;
+use Illuminate\Http\Response;
+use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
+
+    public function __construct(protected User $repository) {
+
+    }
+
     public function index()
     {
-        return User::all();
+        $user = $this->repository::paginate();
+        return UserResource::collection($user);
     }
 
-    public function store(Request $request)
+    public function store(CreateUpdateUserRequest $request)
     {
-        $user = User::create($request->all());
-        return $user;
+        $data = $request->all();
+        $data['password'] = bcrypt($data['password']);
+
+        $user = $this->repository::create($data);
+
+        return new UserResource($user);
     }
 
-    public function show(string $id)
+    public function show(Request $request,string $id)
     {
-        return User::find($id);
+        $user = $this->repository::findOrFail($id);
+        return new UserResource($user);
     }
 
-    public function update(Request $request, string $id)
+    public function update(CreateUpdateUserRequest $request, string $id)
     {
-        $user = User::find($id)->update($request->all());
-        return $user;
+        $data = $request->validated();
+
+        if ($request->password)
+            $data['password'] = bcrypt($data['password']);
+
+        $user = $this->repository::findOrFail($id);
+
+        $user->update($data);
+
+        return new UserResource($user);
     }
 
     public function destroy(string $id)
     {
-        $user = User::find($id)->delete();
-        return $user;
+        $user = $this->repository::findOrFail($id);
+        $user->delete();
+
+        return response()->json([], Response::HTTP_NO_CONTENT);
     }
 }
