@@ -11,13 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('game_like', function (Blueprint $table) {
+        Schema::create('game_likes', function (Blueprint $table) {
             $table->id();
-            $table->string('game_slug');
+            $table->string('game_slug')->unique();
             $table->unsignedBigInteger('user_id');
             $table->timestamps();
 
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('CASCADE');
         });
     }
 
