@@ -54,8 +54,14 @@ class CreateUpdateUserRequest extends FormRequest
                     "nullable",
                     "min:6",
                     "max:100"
-                ]
-                ];
+                ],
+                "name" => [
+                    "required",
+                    "string",
+                    "min:3",
+                    "max:255"
+                ],
+            ];
         }
 
         return $rules;
