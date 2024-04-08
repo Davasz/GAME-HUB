@@ -10,6 +10,9 @@ class User extends Authenticatable
 {
     use HasFactory, HasApiTokens;
 
+    public function gameLikes() {
+        return $this->hasMany(GameLike::class);
+    }
     protected $fillable = [
         'name', 'email', 'password',
     ];
