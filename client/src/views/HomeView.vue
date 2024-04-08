@@ -7,7 +7,7 @@
       <div @click="onGenres('all')" class="category">All</div>
       <div @click="onGenres('action')" class="category">Action</div>
       <div @click="onGenres('indie')" class="category">Indie</div>
-      <div @click="onGenres('arcade')" class="category">arcade</div>
+      <div @click="onGenres('arcade')" class="category">Arcade</div>
       <div @click="onGenres('shooter')" class="category">Shooter</div>
       <div @click="onGenres('casual')" class="category">Casual</div>
       <div @click="onGenres('puzzle')" class="category">Puzzle</div>
