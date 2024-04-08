@@ -11,51 +11,67 @@ use Illuminate\Http\Request;
 class UserController extends Controller
 {
 
-    public function __construct(protected User $repository) {
-
-    }
-
-    public function index()
+    public function __construct(protected User $repository)
     {
-        $user = $this->repository::paginate();
-        return UserResource::collection($user);
+
     }
 
     public function store(CreateUpdateUserRequest $request)
     {
-        $data = $request->all();
-        $data['password'] = bcrypt($data['password']);
-
-        $user = $this->repository::create($data);
-
-        return new UserResource($user);
-    }
-
-    public function show(Request $request,string $id)
-    {
-        $user = $this->repository::findOrFail($id);
-        return new UserResource($user);
-    }
-
-    public function update(CreateUpdateUserRequest $request, string $id)
-    {
-        $data = $request->validated();
-
-        if ($request->password)
+        try {
+            $data = $request->all();
             $data['password'] = bcrypt($data['password']);
 
-        $user = $this->repository::findOrFail($id);
+            $user = $this->repository::create($data);
 
-        $user->update($data);
-
-        return new UserResource($user);
+            return new UserResource($user);
+        } catch (\Throwable $th) {
+            return response()->json(['error' => $th->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
 
-    public function destroy(string $id)
+    public function show(Request $request)
     {
-        $user = $this->repository::findOrFail($id);
-        $user->delete();
+        try {
+            $user_id = $request->user()->id;
+            $user = $this->repository->with('gameLikes')
+                ->find($user_id);
+            return new UserResource($user);
 
-        return response()->json([], Response::HTTP_NO_CONTENT);
+        } catch (\Throwable $th) {
+            return response()->json(['error' => $th->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+
+    }
+
+    public function update(CreateUpdateUserRequest $request)
+    {
+        try {
+            $data = $request->validated();
+
+            if ($request->password)
+                $data['password'] = bcrypt($data['password']);
+
+            $user = $this->repository::findOrFail($request->user()->id);
+
+            $user->update($data);
+
+            return new UserResource($user);
+        } catch (\Throwable $th) {
+            return response()->json(['error' => $th->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    public function destroy(Request $request)
+    {
+        try {
+            $user = $this->repository::findOrFail($request->user()->id);
+            $user->delete();
+
+            return response()->json([], Response::HTTP_NO_CONTENT);
+        } catch (\Throwable $th) {
+            return response()->json(['error' => $th->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+
     }
 }
