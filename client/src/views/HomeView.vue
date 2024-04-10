@@ -1,7 +1,8 @@
 <template>
+  <TheHeader />
 
   <main>
-    <h1>Browse games</h1>
+    <h1 class="top-tittle">Browse games</h1>
 
     <div class="categories">
       <div @click="onGenres('all')" class="category">All</div>
@@ -82,6 +83,7 @@
 <script>
 
 // Import components
+import TheHeader from '@/components/TheHeader.vue'
 import TheSearch from '../components/TheSearch.vue'
 import TopGamesCard from '../components/TopGamesCard.vue'
 import GameCard from '../components/GameCard.vue'
@@ -102,7 +104,8 @@ export default {
   components: {
     TheSearch,
     TopGamesCard,
-    GameCard
+    GameCard,
+    TheHeader
   },
 
   setup() {
@@ -128,7 +131,6 @@ export default {
     }
 
     // Methods
-
     // Animation
     const removeAnimation = () => {
       showAnimation.value = false
@@ -160,7 +162,7 @@ export default {
 
     // Redirect event handler
     const redirectGame = (gameSlug) => {
-      router.replace(`/game/${gameSlug}`)
+      router.push(`/game/${gameSlug}`)
     }
 
     // Apper plataforms (pc: 3, ps: 2, xbox: 1)
@@ -234,7 +236,7 @@ export default {
       removeAnimation()
       activeOnSearchGender()
 
-      setGameStateLocal(store.state.games.search) 
+      setGameStateLocal(store.state.games.search)
       setGameTypeTittle('Result')
     }
 
@@ -259,7 +261,6 @@ export default {
 </script>
 
 <style scoped>
-
 /* Mobile First */
 main {
   display: flex;
@@ -327,5 +328,14 @@ main {
     scrollbar-width: auto;
   }
 
+  .tittle-medium {
+    margin-top: 2.5rem;
+    margin-bottom: 2rem;
+    font-size: 26px;
+  }
+
+  .top-tittle {
+    font-size: 33px;
+  }
 }
 </style>

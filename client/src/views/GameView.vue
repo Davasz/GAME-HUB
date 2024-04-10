@@ -1,66 +1,78 @@
 <template>
+    <TheHeader />
     <main>
-        <img v-if="showAnimation" class="loading-animation" src="../assets/img/animation/loading-animation.svg"
-            alt="loading animation">
-        <section class="header">
-            <div class="head">
-                <div class="date"><span>{{ date }}</span></div>
-                <img v-if="showWin" src="../assets/img/icons/xbox-icon.svg" alt="Plataform icon">
-                <img v-if="showPs" src="../assets/img/icons/ps-icon.svg" alt="Plataform icon">
-                <img v-if="showXbox" src="../assets/img/icons/win-icon.svg" alt="Plataform icon">
-            </div>
-
-            <h1>{{ gameInformations.name }}</h1>
-
-
-            <div class="game-img">
-                <img :src="gameInformations.background_image" alt="Game image">
-            </div>
-
-            <div class="adtional">
-                <div class="hours">
-                    <img src="../assets/img/icons/clock-icon.svg" alt="clock icon">
-                    <span>{{ gameInformations.playtime }} H</span>
+        <section class="head-informations">
+            <img v-if="showAnimation" class="loading-animation" src="../assets/img/animation/loading-animation.svg"
+                alt="loading animation">
+            <section class="header">
+                <div class="head">
+                    <div class="date"><span>{{ date }}</span></div>
+                    <img v-if="showWin" src="../assets/img/icons/xbox-icon.svg" alt="Plataform icon">
+                    <img v-if="showPs" src="../assets/img/icons/ps-icon.svg" alt="Plataform icon">
+                    <img v-if="showXbox" src="../assets/img/icons/win-icon.svg" alt="Plataform icon">
                 </div>
 
-                <div class="rate">
-                    <img src="../assets/img/icons/star-icon.svg" alt="star icon">
-                    <span>{{ gameInformations.rating }}</span>
+                <h1>{{ gameInformations.name }}</h1>
+
+
+                <div class="game-img">
+                    <img :src="gameInformations.background_image" alt="Game image">
                 </div>
-            </div>
+
+                <div class="adtional">
+                    <div class="hours">
+                        <img src="../assets/img/icons/clock-icon.svg" alt="clock icon">
+                        <span>{{ gameInformations.playtime }} H</span>
+                    </div>
+
+                    <div class="rate">
+                        <img src="../assets/img/icons/star-icon.svg" alt="star icon">
+                        <span>{{ gameInformations.rating }}</span>
+                    </div>
+                </div>
+            </section>
+
+            <section class="about-informations">
+                <div class="informations">
+                    <div class="info">
+                        <h1>Developer</h1>
+                        <p>{{ developers }}</p>
+                    </div>
+                    <div class="info-right">
+                        <h1>Genre</h1>
+                        <p>{{ genre }}</p>
+                    </div>
+                    <div class="info">
+                        <h1>Esrb Rate</h1>
+                        <p>{{ esrb }}</p>
+                    </div>
+                    <div class="info-right">
+                        <h1>Plataforms</h1>
+                        <ol>
+                            <li v-for="(plataform, index) in plataformText" :key="index">{{ plataform }}</li>
+                        </ol>
+                    </div>
+                    <div class="info">
+                        <h1>Website</h1>
+                        <a target="_blank" :href="site">{{ site }}</a>
+                    </div>
+                </div>
+                <button>BUY GAME</button>
+                <button @click="onFav">FAV GAME</button>
+            </section>
         </section>
-
-        <section class="about">
+        <div class="about">
             <h1>About</h1>
             <p>{{ gameInformations.description_raw }}</p>
+        </div>
 
-            <div class="informations">
-                <div class="info">
-                    <h1>Developer</h1>
-                    <p>{{ developers }}</p>
-                </div>
-                <div class="info-right">
-                    <h1>Genre</h1>
-                    <p>{{ genre }}</p>
-                </div>
-                <div class="info">
-                    <h1>Esrb Rate</h1>
-                    <p>{{ esrb }}</p>
-                </div>
-                <div class="info-right">
-                    <h1>Plataforms</h1>
-                    <p>{{ plataformText }}</p>
-                </div>
-                <div class="info">
-                    <h1>Website</h1>
-                    <a target="_blank" :href="site">{{ site }}</a>
-                </div>
-            </div>
-        </section>
     </main>
 </template>
 
 <script>
+
+// Import components
+import TheHeader from '@/components/TheHeader.vue'
 
 // Import store
 import { useStore } from 'vuex'
@@ -69,18 +81,22 @@ import { useStore } from 'vuex'
 import { ref } from 'vue'
 
 // Import router
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 
 // Date format lib
 import { format } from 'date-fns';
 
 export default {
+    components: {
+        TheHeader
+    },
     setup() {
         // Store initialization
         const store = useStore()
 
         // Router initialization
         const route = useRoute()
+        const router = useRouter()
 
         // Variables
         let showAnimation = ref(false)
@@ -88,7 +104,7 @@ export default {
         let genre = ref('-')
         let esrb = ref('-')
         let site = ref('-')
-        let plataformText = ref('-')
+        let plataformText = []
         let date = ref('-')
         let showWin = ref()
         let showPs = ref()
@@ -149,16 +165,25 @@ export default {
             alterVariables(plataformText, '')
 
             gameInformations.value.platforms.forEach(game => {
-                plataformText.value += game.platform.name + " "
+                plataformText.push(game.platform.name)
             });
         }
 
         // Render game informations
         getGameInformations()
 
+        const onFav = async () => {
+            //await store.dispatch('favGame', route.params.slug)
+            if(!localStorage.getItem('token')) {
+                router.push('/login')
+            }
+            console.log(route.params.slug)
+        }
+
         // Returning variables
         return {
             route,
+            router,
             store,
             showAnimation,
             getGameInformations,
@@ -171,7 +196,8 @@ export default {
             date,
             showWin,
             showPs,
-            showXbox
+            showXbox,
+            onFav
         }
     }
 }
@@ -192,8 +218,12 @@ main {
     font-size: 13px;
 }
 
-.header {
+.head-informations {
     width: 90%;
+}
+
+.header {
+    width: 100%;
 }
 
 .head {
@@ -262,29 +292,22 @@ h1 {
     margin-left: 1rem;
 }
 
-.about {
+.about-informations {
     display: flex;
     flex-direction: column;
-    width: 90%;
-    margin-top: 2rem;
-    margin-bottom: 10rem;
-}
-
-.about h1 {
-    font-size: 2em;
-}
-
-.about p {
-    font-family: 'Inter';
+    align-items: center;
+    width: 100%;
+    margin-top: 1rem;
 }
 
 .informations {
     margin-top: 3rem;
     display: flex;
-    height: 5rem;
+    height: 50%;
     flex-wrap: wrap;
     align-items: center;
     font-family: 'Trueno';
+    margin-bottom: 4rem;
 }
 
 .info {
@@ -311,7 +334,49 @@ a {
     color: #FFFFFF;
 }
 
+button {
+    background-color: #ffffff;
+    width: 90%;
+    height: 3rem;
+    margin-bottom: 1rem;
+    font-size: 1.3em;
+    transition: 0.4s;
+}
+
+button:hover {
+    background-color: #e0e0e0;
+}
+
+.about {
+    width: 90%;
+    margin-top: 3rem;
+    margin-bottom: 5rem;
+}
+
+.about h1 {
+    font-size: 2em;
+}
+
+.about p {
+    font-family: 'Inter';
+}
+
 @media (min-width: 780px) {
+    .head-informations {
+        display: flex;
+        gap: 1.5rem;
+    }
+
+    .header {
+        width: 60%;
+    }
+
+    .about-informations {
+        width: 40%;
+        margin-top: 3rem;
+        flex-direction: column;
+    }
+
     .game-img img {
         width: 100%;
         height: 100%;
@@ -322,6 +387,11 @@ a {
     .game-img {
         width: 100%;
         height: 30rem;
+    }
+
+    .about {
+        font-size: 1.3em;
+        margin-top: 1rem;
     }
 }
 </style>
