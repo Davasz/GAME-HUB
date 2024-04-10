@@ -5,6 +5,10 @@ const API_KEY = "9bd59e06c3c54bebb78dd73797d56178"
 
 export default createStore({
   state: {
+    user: {
+      isLogin: false,
+      data: {}
+    },
     topGames: [],
     recomendedGames: [],
     games: {
@@ -21,7 +25,7 @@ export default createStore({
   getters: {
   },
   mutations: {
-    
+
     storeTopGames(state, data) {
       data.forEach(element => {
         state.topGames.push(element)
@@ -103,6 +107,61 @@ export default createStore({
         commit('storeSelectedGame', response)
       } catch (error) {
         console.log(error)
+      }
+    },
+
+    async login(state, data) {
+      try {
+        const response = await axios.post('http://localhost:8000/api/auth/login', data, {
+          headers: {
+            Accept: 'application/json'
+          }
+        });
+        localStorage.setItem('token', response.data.token);
+
+        this.state.user.isLogin = true;
+
+        const user = await axios.get('http://localhost:8000/api/user', {
+          headers: {
+            Accept: 'application/json',
+            Authorization: `Bearer ${response.data.token}`
+          }
+        });
+
+        this.state.user.data = user.data.data;
+      } catch (error) {
+        state.state.user.isLogin = false;
+        return error.response.data;
+      }
+
+    },
+
+    async register(state, data) {
+      try {
+        const response = await axios.post('http://localhost:8000/api/auth/register', data, {
+          headers: {
+            Accept: 'application/json'
+          }
+        });
+
+        console.log(response.data);
+      } catch (error) {
+        return error.response.data;
+      }
+    },
+
+    async getUser() {
+      try {
+        const user = await axios.get('http://localhost:8000/api/user', {
+          headers: {
+            Accept: 'application/json',
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+          }
+        });
+        this.state.user.data = user.data.data;
+        this.state.user.isLogin = true;
+      } catch (error) {
+        return error.response.data
       }
     }
   }
