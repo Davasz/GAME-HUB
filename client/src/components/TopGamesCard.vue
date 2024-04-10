@@ -1,5 +1,5 @@
 <template>
-    <div class="card-container">
+    <div @click="redirectGame" class="card-container">
         <div class="card-image">
             <img :src="imageUrl" alt="Game image">
         </div>
@@ -9,7 +9,6 @@
                 <img src="../assets/img/icons/star-icon.svg" alt="icon start">
                 <slot name="game-rate"></slot>
             </div>
-            <img @click="redirectGame" class="card-button" src="../assets/img/icons/button-icon.svg" alt="">
         </div>
     </div>
 </template>
@@ -46,6 +45,7 @@ export default {
     border-radius: 1.5rem;
     overflow: hidden;
     margin-right: 1rem;
+    cursor: pointer;
 }
 
 .card-image {
@@ -100,5 +100,19 @@ export default {
 
 .card-button {
     cursor: pointer;
+}
+
+@media (min-width: 780px) {
+
+    .card-container {
+        background-color: #0E161F;
+        width: 20rem;
+        height: 15rem;
+        border-radius: 1.5rem;
+        overflow: hidden;
+        margin-right: 1rem;
+        cursor: pointer;
+    }
+
 }
 </style>

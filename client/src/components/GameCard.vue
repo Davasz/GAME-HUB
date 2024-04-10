@@ -1,5 +1,5 @@
 <template>
-    <div class="card-game-conteiner">
+    <div @click="redirectGame" class="card-game-conteiner">
         <div class="card-game-image">
             <img :src="imageUrl" alt="Game image">
         </div>
@@ -13,7 +13,6 @@
                 <slot name="card-game-plataform-images"></slot>
             </div>
         </div>
-        <img @click="redirectGame" class="card-game-button" src="../assets/img/icons/button-icon.svg" alt="icon go">
     </div>
 </template>
 
@@ -53,6 +52,7 @@ export default {
     background-color: #0E161F;
     border-radius: 1.5rem;
     margin-bottom: 1rem;
+    cursor: pointer;
 }
 
 .card-game-image {
@@ -106,6 +106,28 @@ export default {
     .card-game-conteiner {
         width: 30%;
         margin-right: 1rem;
+        height: 7rem;
+    }
+
+    .card-game-image {
+        width: 5rem;
+        height: 5rem;
+        border-radius: 0.7rem;
+        margin-left: 1rem;
+        background-color: aliceblue;
+    }
+
+    .card-game-tittle {
+        display: flex;
+        align-items: center;
+        color: #80FF85;
+        font-size: 1.4em;
+        margin-bottom: 0.6rem;
+    }
+
+    .card-game-plataforms img {
+        width: 1.3rem;
+        height: 1.3rem;
     }
 }
 </style>
