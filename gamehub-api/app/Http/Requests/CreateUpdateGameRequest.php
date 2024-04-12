@@ -24,7 +24,6 @@ class CreateUpdateGameRequest extends FormRequest
         $rules = [
             "game_slug" => [
                 "required",
-                "unique:game_likes",
             ]
         ];
         return $rules;
