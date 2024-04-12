@@ -12,7 +12,7 @@ onMounted(() => {
 
 <template>
     <div class="box">
-        <img src="../assets/img/icons/bougth-icon.svg" alt="">
+        <img src="../../assets/img/icons/bougth-icon.svg" alt="">
         <h1>Game bougth with sucess, check your e-mail</h1>
     </div>
 </template>

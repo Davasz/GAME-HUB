@@ -16,7 +16,7 @@ onMounted(() => {
 
 <template>
     <div class="box">
-        <img src="../assets/img/icons/error-icon.svg" alt="">
+        <img src="../../assets/img/icons/error-icon.svg" alt="">
         <h1>{{props.textValue}}</h1>
     </div>
 </template>
