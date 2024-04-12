@@ -120,7 +120,7 @@ let gameInformations = ref({
 
 })
 
-// Methods
+// METHODS
 
 // Animation
 const removeAnimation = () => {
@@ -198,6 +198,7 @@ const onFav = async () => {
     }
 }
 
+// Buy button
 const onBuy = async () => {
     if (!localStorage.getItem('token')) {
         router.push('/login')
@@ -409,6 +410,9 @@ button:hover {
     .about {
         font-size: 1.3em;
         margin-top: 1rem;
+    }
+    .informations {
+        font-size: 1.3em;
     }
 }
 </style>

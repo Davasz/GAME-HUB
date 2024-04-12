@@ -74,6 +74,7 @@ export default createStore({
       }
     },
 
+    // SAVE RECOMENDED GAMES
     async storeRecomendedGames({ commit }) {
       try {
         const response = await axios.get(`https://api.rawg.io/api/games?key=${API_KEY}&page_size=12&page=2`).then(e => e.data.results)
@@ -84,6 +85,7 @@ export default createStore({
       }
     },
 
+    // SAVE GANES
     async storeGames({ commit }, data) {
       let query = ''
 
@@ -115,6 +117,7 @@ export default createStore({
       }
     },
 
+    // LOGIN USER
     async login(state, data) {
       try {
         const response = await axios.post('http://localhost:8000/api/auth/login', data, {
@@ -141,6 +144,7 @@ export default createStore({
 
     },
 
+    // REGISTER USER
     async register(state, data) {
       try {
         const response = await axios.post('http://localhost:8000/api/auth/register', data, {
@@ -156,6 +160,7 @@ export default createStore({
       }
     },
 
+    // GET USER INFORMATIONS
     async getUser() {
       try {
         const user = await axios.get('http://localhost:8000/api/user', {
@@ -172,6 +177,7 @@ export default createStore({
       }
     },
 
+    // FAV GAME
     async favGame(state, data) {
       try {
         const response = await axios.post('http://localhost:8000/api/games/like', data, {
@@ -186,6 +192,8 @@ export default createStore({
         throw error
       }
     },
+
+    // BUY GAME
     async buyGame(state, data) {
       try {
         const response = await axios.post('http://localhost:8000/api/games/buy', data, {
@@ -200,6 +208,8 @@ export default createStore({
         throw error
       }
     },
+
+    // GET INFORMATIONS OF LIKED GAMES
     async getLikedGamesInformations(state, data) {
       this.state.user.loadLikedGames = []
       data.forEach(async (game) => {
@@ -212,6 +222,8 @@ export default createStore({
         }
       })
     },
+
+    // GET INFORMATIONS OF GAMES BOUGTHS
     async getBoughtGamesInformations(state, data) {
       this.state.user.loadBougthGames = []
       data.forEach(async (game) => {
@@ -225,6 +237,7 @@ export default createStore({
       })
     },
     
+    // DELETE USER
     async deleteUser() {
       try {
         await axios.delete('http://localhost:8000/api/user',{

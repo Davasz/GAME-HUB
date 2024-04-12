@@ -12,8 +12,9 @@
     </header>
 </template>
 
-<script>
+<script setup>
 
+// Import vue functions
 import { ref } from 'vue'
 
 // Import router
@@ -22,75 +23,69 @@ import { useRouter } from 'vue-router'
 // Import store
 import { useStore } from 'vuex'
 
-export default {
-    setup() {
+// INIT
+const router = useRouter()
 
-        let bt1Text = ref()
-        let bt2Text = ref()
-        let bt3Text = ref()
-        let showDropdow = ref(false)
+const store = useStore()
 
-        // Router initialization
-        const router = useRouter()
+// ----------------------
 
-        const store = useStore()
+// VARIABLES
 
+let bt1Text = ref()
+let bt2Text = ref()
+let bt3Text = ref()
+let showDropdow = ref(false)
 
-        const loadData = async () => {
-            try {
-                if (!localStorage.getItem('token')) {
-                    bt1Text.value = 'Login'
-                    return
-                }
-                await store.dispatch('getUser')
-                bt1Text.value = 'Profile'
-                bt2Text.value = 'Likes'
-                bt3Text.value = 'Logout'
-            } catch (error) {
-                router.push('/login')
-            }
+// ----------------------
+
+// METHODS
+
+const loadData = async () => {
+    try {
+        if (!localStorage.getItem('token')) {
+            bt1Text.value = 'Login'
+            return
         }
-
-        loadData()
-
-        const toggleDropdown = () => {
-            showDropdow.value = !showDropdow.value
-        }
-
-        const redirect = (button) => {
-            if (button == 1) {
-                if (bt1Text.value === 'Login') {
-                    router.push('/login')
-                    return
-                }
-                router.push('/user')
-                return
-            }
-            if (button == 2) {
-                router.push('/user/#likes')
-                return
-            }
-            localStorage.removeItem('token')
-            location.reload()
-            router.push('/')
-        }
-
-        // Redirect to home page
-        const onHome = () => {
-            router.push("/")
-        }
-
-        // Returning variables
-        return {
-            onHome,
-            bt1Text,
-            bt2Text,
-            bt3Text,
-            toggleDropdown,
-            showDropdow,
-            redirect
-        }
+        await store.dispatch('getUser')
+        bt1Text.value = 'Profile'
+        bt2Text.value = 'Likes'
+        bt3Text.value = 'Logout'
+    } catch (error) {
+        router.push('/login')
     }
+}
+
+// LOAD DATA
+loadData()
+
+// Dropdown profile
+const toggleDropdown = () => {
+    showDropdow.value = !showDropdow.value
+}
+
+// Redirect
+const redirect = (button) => {
+    if (button == 1) {
+        if (bt1Text.value === 'Login') {
+            router.push('/login')
+            return
+        }
+        router.push('/user')
+        return
+    }
+    if (button == 2) {
+        router.push('/user/#like')
+        return
+    }
+    localStorage.removeItem('token')
+    location.reload()
+    router.push('/')
+}
+
+// Redirect to home page
+const onHome = () => {
+    router.push("/")
 }
 
 </script>

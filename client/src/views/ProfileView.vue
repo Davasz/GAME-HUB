@@ -1,22 +1,32 @@
 <script setup>
 
+// Import components
 import TheHeader from '@/components/TheHeader.vue'
 import GameCard from '@/components/GameCard.vue'
 import ErrorAlert from '@/components/alerts/ErrorAlert.vue'
 import TopGamesCard from '../components/TopGamesCard.vue'
 
+
+// Import gsap lib
 import gsap from 'gsap'
 
 
 // Import router
 import { useRouter } from 'vue-router'
 
+// Import store
 import { useStore } from 'vuex'
+
+// Import vue functions
 import { ref, reactive } from 'vue'
 
-
+// Init
 const router = useRouter()
 const store = useStore()
+
+//----------------------------------
+
+// VARIABLES
 
 let showErrorAlert = ref(false)
 let errorText = ref('')
@@ -37,14 +47,21 @@ const level = reactive({
     to: 0
 })
 
+// --------------------------------
+
+// METHODS
+
 const loadInformations = async () => {
     name.value = store.state.user.data.name.split(' ')[0]
     favGames.to = store.state.user.data.game_likes.length
     bougthGames.to = store.state.user.data.game_bougts.length
     level.to = (bougthGames.to / 3).toFixed(1)
+
+    // GSAP ANIMATION
     gsap.to(favGames, { duration: 2, number: favGames.to || 0 })
     gsap.to(bougthGames, { duration: 2, number: bougthGames.to || 0 })
     gsap.to(level, { duration: 2, number: level.to || 0 })
+
     if (level.to < 10) profileMedal.value = 'bronze'
     if (level.to >= 10 && level.to < 30) profileMedal.value = 'silver'
     if (level.to >= 30) profileMedal.value = 'gold'
@@ -76,6 +93,7 @@ const loadData = async () => {
     }
 }
 
+// LOAD DATA
 loadData()
 
 // Apper plataforms (pc: 3, ps: 2, xbox: 1)
@@ -88,14 +106,17 @@ const verifyPlataform = (parentPlatforms, id) => {
     return false
 }
 
+// DELETE MODAL
 const onDelete = () => {
     showModelDelete.value = true
 }
 
+// CANCEL DELETE
 const cancelDelete = () => {
     showModelDelete.value = false
 }
 
+// CONFIRM DELETE
 const confirmDelete = async () => {
     try {
         await store.dispatch('deleteUser')
@@ -107,6 +128,11 @@ const confirmDelete = async () => {
             showErrorAlert.value = false
         }, 3000);
     }
+}
+
+// Redirect event handler
+const redirectGame = (gameSlug) => {
+    router.push(`/game/${gameSlug}`)
 }
 
 </script>
@@ -208,7 +234,7 @@ const confirmDelete = async () => {
         </section>
 
         <div v-if="showModelDelete" class="modalDelete">
-            <h1>Are you sure you want to delete this user (this action is irreversible)?</h1>
+            <h1>Are you sure you want to delete this user? (this action is irreversible)</h1>
             <div class="buttons-delete">
                 <button class="delete" @click="confirmDelete">Yes</button>
                 <button class="cancel" @click="cancelDelete">No</button>

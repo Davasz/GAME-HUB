@@ -1,11 +1,18 @@
 <script setup>
+
+// Import vue functions
 import { onMounted, defineProps } from 'vue';
+
+// Import gsap lib
 import gsap from 'gsap';
 
+
+// PROPS
 const props = defineProps({
     textValue: String
 })
 
+// RENDER ANIMATION
 onMounted(() => {
     const timeline = gsap.timeline();
 

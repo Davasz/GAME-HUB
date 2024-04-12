@@ -32,6 +32,8 @@
 </template>
 
 <script setup>
+
+// Import Components
 import ErrorAlert from '@/components/alerts/ErrorAlert.vue'
 
 // Import router
@@ -43,17 +45,25 @@ import { useStore } from 'vuex'
 // Import vue functions
 import { ref } from 'vue'
 
+// Init
 const router = useRouter()
 const store = useStore()
 
+// -----------------------
+
+// VARIABLES
 let checkbox = ref()
 let showErrorAlert = ref(false)
 let errorText = ref('')
-
 let name = ref()
 let email = ref()
 let password = ref()
 
+// ------------------------
+
+// METHODS
+
+// Handle form submit
 const handleSubmit = async (type) => {
     if (type == 'login') {
         try {
@@ -86,7 +96,6 @@ const handleSubmit = async (type) => {
             }, 3000)
             return
         }
-
     }
 }
 

@@ -1,10 +1,14 @@
 <script setup>
+
+// Import vue functions
 import { onMounted } from 'vue';
+
+// Import gsap lib
 import gsap from 'gsap';
 
+// RENDER ANIMATION
 onMounted(() => {
     const timeline = gsap.timeline();
-
     timeline.to(".box", { x: '115vw', duration: 1 })
         .to(".box", { x: 0, duration: 1, delay: 1.2 });
 });
