@@ -6,6 +6,12 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
 
+@font-face {
+  font-family: 'Apex MK3';
+  src: url('/src/assets/fonts/apex-md3-medium.otf');
+  font-weight: normal;
+}
+
 /* Reset */
 * {
   margin: 0;
