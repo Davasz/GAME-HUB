@@ -13,6 +13,9 @@ class User extends Authenticatable
     public function gameLikes() {
         return $this->hasMany(GameLike::class);
     }
+    public function gameBougth() {
+        return $this->hasMany(GameBougth::class);
+    }
     protected $fillable = [
         'name', 'email', 'password',
     ];
