@@ -72,7 +72,7 @@ export default {
 
 .card-game-informations {
     margin-left: 1rem;
-    width: 60%;
+    width: 70%;
 }
 
 .card-game-tittle {
@@ -84,7 +84,7 @@ export default {
 }
 
 .card-game-name {
-    max-width: 8rem;
+    max-width: 10rem;
     word-wrap: break-word;
     margin-right: 0.4rem;
 }
