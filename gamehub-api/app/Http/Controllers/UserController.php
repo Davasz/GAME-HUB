@@ -34,7 +34,7 @@ class UserController extends Controller
     {
         try {
             $user_id = $request->user()->id;
-            $user = $this->repository->with('gameLikes')
+            $user = $this->repository->with('gameBougth', 'gameLikes')
                 ->find($user_id);
             return new UserResource($user);
 
