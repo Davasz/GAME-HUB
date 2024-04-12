@@ -119,6 +119,14 @@ Você precisará ter instalado na sua maquina:
 * [RAWG Video Games Database API](https://api.rawg.io/docs/)) - API de dados.
 
 
+## Features para implementar
+
+* Botão de editar as informações do usuário;
+* Paginação dos jogos comprados e com like;
+* Aplicar animações e efeitos em todas as telas;
+* Melhorar o tratamento de erros;
+* Padronizar todo o código.
+
 ## ✒️ Autores
 
 * **Davi Souza** - *Desenvolvimento Completo* - [Davi Souza](https://www.linkedin.com/in/davi-souza-745155246/)
