@@ -14,6 +14,62 @@ Você precisará ter instalado na sua maquina:
   • Docker e Docker compose  
   • Node.js e NPM
   • Git
+  • PHP 8+ e Composer
+```
+    
+## 🔧 Instalação - Back-End
+
+### 1. Clonando o projeto
+
+• Execute o comando no seu terminal e clone o repositório:
+
+```bash
+  $ git clone https://github.com/DaviSouzaES/GAME-HUB-ES.git 
+```
+
+• Entre na pasta do projeto
+
+```bash
+  $ cd GAME-HUB-ES
+```
+
+### 2. Preparando as dependências
+
+• Entre na pasta gamehub-api
+
+```bash
+  $ cd gamehub-api
+```
+
+• Instale as dependências
+
+```bash
+  $ composer install
+```
+
+### 3. Ambiente de desenvolvimento
+
+• Construir e rodar os containers:
+
+```bash
+  // Abra o seu docker desktop
+```
+
+```bash
+  (Rode no path do docker-compose.yml)    
+  $ npm run start:docker
+```
+
+• Iniciar servidor Back-End:
+
+```bash    
+  $ php artisan serve
+```
+
+• Resultado:
+
+```bash
+  INFO  Server running on [http://127.0.0.1:8000].
 ```
 
 ## 🔧 Instalação - Front-Env Vue
@@ -57,7 +113,9 @@ Você precisará ter instalado na sua maquina:
 ## 🛠️ Construído com
 
 * [Vue.js](https://vuejs.org) - O framework web usado;
+* [Laravel](https://laravel.com) - O framework back-end usado;
 * [NPM](https://www.npmjs.com) - Gerente de Dependência;
+* [Composer](https://getcomposer.org) - Gerente de Dependência;
 * [RAWG Video Games Database API](https://api.rawg.io/docs/)) - API de dados.
 
 
