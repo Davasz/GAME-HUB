@@ -1,0 +1,12 @@
+version: '3.1'
+services:
+  database:
+    image: mysql
+    container_name: database-container
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456g
+      MYSQL_DATABASE: gamehubdb
+      MYSQL_USER: gamehub
+      MYSQL_PASSWORD: 123456g
+    ports:
+      - "3300:3306"
