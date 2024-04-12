@@ -32,6 +32,10 @@
                 </div>
             </section>
 
+            <FavGame v-if="showAlertFav"></FavGame>
+            <BuyGame v-if="showAlertBuy"></BuyGame>
+            <ErrorAlert v-if="showErrorAlert" :text-value="errorText"></ErrorAlert>
+
             <section class="about-informations">
                 <div class="informations">
                     <div class="info">
@@ -57,7 +61,7 @@
                         <a target="_blank" :href="site">{{ site }}</a>
                     </div>
                 </div>
-                <button>BUY GAME</button>
+                <button @click="onBuy">BUY GAME</button>
                 <button @click="onFav">FAV GAME</button>
             </section>
         </section>
@@ -69,10 +73,13 @@
     </main>
 </template>
 
-<script>
+<script setup>
 
 // Import components
 import TheHeader from '@/components/TheHeader.vue'
+import FavGame from '@/components/alerts/FavGame.vue'
+import BuyGame from '@/components/alerts/BuyGame.vue'
+import ErrorAlert from '@/components/alerts/ErrorAlert.vue'
 
 // Import store
 import { useStore } from 'vuex'
@@ -86,121 +93,131 @@ import { useRoute, useRouter } from 'vue-router'
 // Date format lib
 import { format } from 'date-fns';
 
-export default {
-    components: {
-        TheHeader
-    },
-    setup() {
-        // Store initialization
-        const store = useStore()
+// Store initialization
+const store = useStore()
 
-        // Router initialization
-        const route = useRoute()
-        const router = useRouter()
+// Router initialization
+const route = useRoute()
+const router = useRouter()
 
-        // Variables
-        let showAnimation = ref(false)
-        let developers = ref('-')
-        let genre = ref('-')
-        let esrb = ref('-')
-        let site = ref('-')
-        let plataformText = []
-        let date = ref('-')
-        let showWin = ref()
-        let showPs = ref()
-        let showXbox = ref()
+// Variables
+let showAnimation = ref(false)
+let developers = ref('-')
+let genre = ref('-')
+let esrb = ref('-')
+let site = ref('-')
+let plataformText = []
+let date = ref('-')
+let showWin = ref()
+let showPs = ref()
+let showXbox = ref()
+let showAlertFav = ref(false)
+let showAlertBuy = ref(false)
+let showErrorAlert = ref(false)
+let errorText = ref('')
 
-        let gameInformations = ref({
+let gameInformations = ref({
 
-        })
+})
 
-        // Methods
+// Methods
 
-        // Animation
-        const removeAnimation = () => {
-            showAnimation.value = false
-        }
+// Animation
+const removeAnimation = () => {
+    showAnimation.value = false
+}
 
-        const apperAnimation = () => {
-            showAnimation.value = true
-        }
+const apperAnimation = () => {
+    showAnimation.value = true
+}
 
-        const alterVariables = (variable, newValue) => {
-            variable.value = newValue
-        }
+const alterVariables = (variable, newValue) => {
+    variable.value = newValue
+}
 
-        // Convert (yyyy-mm-dd) -> (MMM-dd- yyyy)
-        const formatDate = (dateString) => {
-            const formattedDate = format(new Date(dateString), 'MMM dd, yyyy');
-            return formattedDate.toUpperCase();
-        };
+// Convert (yyyy-mm-dd) -> (MMM-dd- yyyy)
+const formatDate = (dateString) => {
+    const formattedDate = format(new Date(dateString), 'MMM dd, yyyy');
+    return formattedDate.toUpperCase();
+};
 
-        const getGameInformations = async () => {
-            apperAnimation()
-            // Select game according to slug route param
-            await store.dispatch('getSelectedGame', route.params.slug)
+const getGameInformations = async () => {
+    apperAnimation()
+    // Select game according to slug route param
+    await store.dispatch('getSelectedGame', route.params.slug)
 
-            removeAnimation()
+    removeAnimation()
 
-            gameInformations.value = store.state.games.gameSelected[0]
+    gameInformations.value = store.state.games.gameSelected[0]
 
-            alterVariables(date, formatDate(gameInformations.value.released))
+    alterVariables(date, formatDate(gameInformations.value.released))
 
-            // Apper plataforms (pc: 3, ps: 2, xbox: 1)
-            let plataforms = gameInformations.value.parent_platforms
-            for (let i = 0; i < plataforms.length; i++) {
-                if (plataforms[i].platform.id == 3) {
-                    alterVariables(showWin, true)
-                } else if (plataforms[i].platform.id == 2) {
-                    alterVariables(showPs, true)
-                } else if (plataforms[i].platform.id == 1) {
-                    alterVariables(showXbox, true)
-                }
-            }
-
-            alterVariables(developers, gameInformations.value.developers[0]?.name ?? '-')
-            alterVariables(genre, gameInformations.value.genres[0]?.name ?? '-')
-            alterVariables(esrb, gameInformations.value.esrb_rating?.name ?? '-')
-            alterVariables(site, gameInformations.value?.website ?? '-')
-            alterVariables(plataformText, '')
-
-            gameInformations.value.platforms.forEach(game => {
-                plataformText.push(game.platform.name)
-            });
-        }
-
-        // Render game informations
-        getGameInformations()
-
-        const onFav = async () => {
-            //await store.dispatch('favGame', route.params.slug)
-            if(!localStorage.getItem('token')) {
-                router.push('/login')
-            }
-            console.log(route.params.slug)
-        }
-
-        // Returning variables
-        return {
-            route,
-            router,
-            store,
-            showAnimation,
-            getGameInformations,
-            gameInformations,
-            developers,
-            genre,
-            esrb,
-            site,
-            plataformText,
-            date,
-            showWin,
-            showPs,
-            showXbox,
-            onFav
+    // Apper plataforms (pc: 3, ps: 2, xbox: 1)
+    let plataforms = gameInformations.value.parent_platforms
+    for (let i = 0; i < plataforms.length; i++) {
+        if (plataforms[i].platform.id == 3) {
+            alterVariables(showWin, true)
+        } else if (plataforms[i].platform.id == 2) {
+            alterVariables(showPs, true)
+        } else if (plataforms[i].platform.id == 1) {
+            alterVariables(showXbox, true)
         }
     }
+
+    alterVariables(developers, gameInformations.value.developers[0]?.name ?? '-')
+    alterVariables(genre, gameInformations.value.genres[0]?.name ?? '-')
+    alterVariables(esrb, gameInformations.value.esrb_rating?.name ?? '-')
+    alterVariables(site, gameInformations.value?.website ?? '-')
+    alterVariables(plataformText, '')
+
+    gameInformations.value.platforms.forEach(game => {
+        plataformText.push(game.platform.name)
+    });
 }
+
+// Render game informations
+getGameInformations()
+
+const onFav = async () => {
+    if (!localStorage.getItem('token')) {
+        router.push('/login')
+        return
+    }
+    try {
+        await store.dispatch('favGame', {game_slug : route.params.slug})
+        showAlertFav.value = true
+        setTimeout(() => {
+            showAlertFav.value = false
+        }, 3000);
+    } catch (error) {
+        showErrorAlert.value = true
+        errorText.value = 'You already fav this game'
+        setTimeout(() => {
+            showErrorAlert.value = false
+        }, 3000)
+    }
+}
+
+const onBuy = async () => {
+    if (!localStorage.getItem('token')) {
+        router.push('/login')
+        return
+    }
+    try {
+        await store.dispatch('buyGame', {game_slug : route.params.slug})
+        showAlertBuy.value = true
+        setTimeout(() => {
+            showAlertBuy.value = false
+        }, 3000);
+    } catch (error) {
+        showErrorAlert.value = true
+        errorText.value = 'You already buy this game'
+        setTimeout(() => {
+            showErrorAlert.value = false
+        }, 3000)
+    }
+}
+
 
 </script>
 
