@@ -131,7 +131,8 @@ Você precisará ter instalado na sua maquina:
 * Paginação dos jogos comprados e com like;
 * Aplicar animações e efeitos em todas as telas;
 * Melhorar o tratamento de erros;
-* Padronizar todo o código.
+* Padronizar todo o código;
+* Poder remover um jogo favoritado.
 
 ## ✒️ Autores
 
