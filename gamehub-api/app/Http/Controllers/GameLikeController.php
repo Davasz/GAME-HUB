@@ -22,17 +22,26 @@ class GameLikeController extends Controller
 
     public function store(CreateUpdateGameRequest $request)
     {
-        $userId = $request->user()->id;
-        $data = $request->validated();
-        $data["user_id"] = $userId;
+        try {
+            $userId = $request->user()->id;
 
-        $game = $this->repository->create($data);
-        return $game;
-    }
+            $likedGame = $this->repository
+                ->where('user_id', $userId)
+                ->where('game_slug', $request->game_slug)
+                ->first();
 
-    public function update(Request $request, GameLike $gameLikes)
-    {
-        //
+            if ($likedGame) {
+                return response()->json(['error' => 'This game has already been liked'], Response::HTTP_FORBIDDEN);
+            }
+
+            $data = $request->validated();
+            $data["user_id"] = $userId;
+
+            $game = $this->repository->create($data);
+            return $game;
+        } catch (\Throwable $th) {
+            return response()->json(['error' => $th->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
 
     public function destroy(Request $request, string $id)
@@ -40,6 +49,7 @@ class GameLikeController extends Controller
         try {
             $userId = $request->user()->id;
             $game = $this->repository->find($userId);
+            $game->delete();
         } catch (\Throwable $th) {
             return response()->json(['error' => $th->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
