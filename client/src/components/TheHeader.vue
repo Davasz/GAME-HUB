@@ -37,15 +37,20 @@ export default {
 
 
         const loadData = async () => {
-            if (!localStorage.getItem('token')) {
-                bt1Text.value = 'Login'
-                return
+            try {
+                if (!localStorage.getItem('token')) {
+                    bt1Text.value = 'Login'
+                    return
+                }
+                await store.dispatch('getUser')
+                bt1Text.value = 'Profile'
+                bt2Text.value = 'Likes'
+                bt3Text.value = 'Logout'
+            } catch (error) {
+                router.push('/login')
             }
-            await store.dispatch('getUser')
-            bt1Text.value = 'Profile'
-            bt2Text.value = 'Likes'
-            bt3Text.value = 'Logout'
         }
+
         loadData()
 
         const toggleDropdown = () => {
@@ -62,7 +67,7 @@ export default {
                 return
             }
             if (button == 2) {
-                router.push('/user/likes')
+                router.push('/user/#likes')
                 return
             }
             localStorage.removeItem('token')
