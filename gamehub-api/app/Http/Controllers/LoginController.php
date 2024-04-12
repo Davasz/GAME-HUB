@@ -17,6 +17,6 @@ class LoginController extends Controller
             ]);
         }
                     
-        return response()->json(["mesage" => "Unauthorized"], Response::HTTP_UNAUTHORIZED);
+        return response()->json(["message" => "Email or password wrogn"], Response::HTTP_UNAUTHORIZED);
     }
 }
