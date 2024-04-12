@@ -1,14 +1,16 @@
 <template>
     <main>
+        <ErrorAlert v-if="showErrorAlert" :text-value="errorText"></ErrorAlert>
         <div class="main">
-            <input type="checkbox" id="chk" aria-hidden="true">
-
+            <input v-model="checkbox" type="checkbox" id="chk" aria-hidden="true">
             <div class="login">
                 <form @submit.prevent="handleSubmit('login')" class="form">
                     <label for="chk" aria-hidden="true">Log in</label>
                     <input v-model="email" class="input" type="email" name="email" placeholder="Email" required>
                     <input v-model="password" class="input" type="password" name="password" placeholder="Password"
                         required>
+                    <span v-if="password && password.length <= 6" style="color: red;">A senha deve ter no mínimo 6
+                        caracteres</span>
                     <button>Login</button>
                 </form>
             </div>
@@ -20,6 +22,8 @@
                     <input v-model="email" class="input" type="email" name="email" placeholder="Email" required>
                     <input v-model="password" class="input" type="password" name="pswd" placeholder="Password" min="8"
                         required>
+                    <span v-if="password && password.length <= 6" style="color: red;">A senha deve ter no mínimo 6
+                        caracteres</span>
                     <button>Register</button>
                 </form>
             </div>
@@ -27,7 +31,9 @@
     </main>
 </template>
 
-<script>
+<script setup>
+import ErrorAlert from '@/components/alerts/ErrorAlert.vue'
+
 // Import router
 import { useRouter } from 'vue-router'
 
@@ -37,41 +43,53 @@ import { useStore } from 'vuex'
 // Import vue functions
 import { ref } from 'vue'
 
-export default {
-    setup() {
-        const router = useRouter()
-        const store = useStore()
+const router = useRouter()
+const store = useStore()
 
-        let name = ref()
-        let email = ref()
-        let password = ref()
+let checkbox = ref()
+let showErrorAlert = ref(false)
+let errorText = ref('')
 
-        const handleSubmit = async (type) => {
-            if (type == 'login') {
-                await store.dispatch('login', {
-                    email: email.value,
-                    password: password.value
-                })
-                router.push('/user')
-            } else {
-                const response = await store.dispatch('register', {
-                    name: name.value,
-                    email: email.value,
-                    password: password.value
-                })
-                console.log(response)
-            }
+let name = ref()
+let email = ref()
+let password = ref()
+
+const handleSubmit = async (type) => {
+    if (type == 'login') {
+        try {
+            await store.dispatch('login', {
+                email: email.value,
+                password: password.value
+            })
+        } catch (error) {
+            showErrorAlert.value = true
+            errorText.value = error.response.data.message
+            setTimeout(() => {
+                showErrorAlert.value = false
+            }, 3000)
+            return
+        }
+        router.push('/user')
+    } else {
+        try {
+            await store.dispatch('register', {
+                name: name.value,
+                email: email.value,
+                password: password.value
+            })
+            checkbox.value = false
+        } catch (error) {
+            showErrorAlert.value = true
+            errorText.value = error.response.data.message
+            setTimeout(() => {
+                showErrorAlert.value = false
+            }, 3000)
+            return
         }
 
-        return {
-            store,
-            name,
-            email,
-            password,
-            handleSubmit
-        }
     }
 }
+
 </script>
 
 <style scoped>
