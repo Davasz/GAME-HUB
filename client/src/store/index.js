@@ -7,7 +7,9 @@ export default createStore({
   state: {
     user: {
       isLogin: false,
-      data: {}
+      data: {},
+      loadLikedGames: [],
+      loadBougthGames: []
     },
     topGames: [],
     recomendedGames: [],
@@ -68,6 +70,7 @@ export default createStore({
         commit('storeTopGames', response)
       } catch (error) {
         console.log(error)
+        throw error
       }
     },
 
@@ -77,6 +80,7 @@ export default createStore({
         commit('storeRecomendedGames', response)
       } catch (error) {
         console.log(error)
+        throw error
       }
     },
 
@@ -97,6 +101,7 @@ export default createStore({
         })
       } catch (error) {
         console.log(error)
+        throw error
       }
     },
 
@@ -131,7 +136,7 @@ export default createStore({
         this.state.user.data = user.data.data;
       } catch (error) {
         state.state.user.isLogin = false;
-        return error.response.data;
+        throw error
       }
 
     },
@@ -146,7 +151,8 @@ export default createStore({
 
         console.log(response.data);
       } catch (error) {
-        return error.response.data;
+        console.log(error)
+        throw error
       }
     },
 
@@ -161,7 +167,75 @@ export default createStore({
         this.state.user.data = user.data.data;
         this.state.user.isLogin = true;
       } catch (error) {
-        return error.response.data
+        console.log(error)
+        throw error
+      }
+    },
+
+    async favGame(state, data) {
+      try {
+        const response = await axios.post('http://localhost:8000/api/games/like', data, {
+          headers: {
+            Accept: 'application/json',
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+          }
+        })
+        console.log(response)
+      } catch (error) {
+        console.log(error)
+        throw error
+      }
+    },
+    async buyGame(state, data) {
+      try {
+        const response = await axios.post('http://localhost:8000/api/games/buy', data, {
+          headers: {
+            Accept: 'application/json',
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+          }
+        })
+        console.log(response)
+      } catch (error) {
+        console.log(error)
+        throw error
+      }
+    },
+    async getLikedGamesInformations(state, data) {
+      this.state.user.loadLikedGames = []
+      data.forEach(async (game) => {
+        try {
+          const response = await axios.get(`https://api.rawg.io/api/games/${game.game_slug}?key=${API_KEY}&page_size=10`).then(e => e.data)
+          this.state.user.loadLikedGames.push(response)
+        } catch (error) {
+          console.log(error)
+          throw error
+        }
+      })
+    },
+    async getBoughtGamesInformations(state, data) {
+      this.state.user.loadBougthGames = []
+      data.forEach(async (game) => {
+        try {
+          const response = await axios.get(`https://api.rawg.io/api/games/${game.game_slug}?key=${API_KEY}&page_size=10`).then(e => e.data)
+          this.state.user.loadBougthGames.push(response)
+        } catch (error) {
+          console.log(error)
+          throw error
+        }
+      })
+    },
+    
+    async deleteUser() {
+      try {
+        await axios.delete('http://localhost:8000/api/user',{
+          headers: {
+            Accept: 'application/json',
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+          }
+        })
+      } catch (error) {
+        console.log(error)
+        throw error
       }
     }
   }
