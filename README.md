@@ -60,6 +60,12 @@ Você precisará ter instalado na sua maquina:
   $ npm run start:docker
 ```
 
+• Rode as migrations:
+
+```bash
+  $ php artisan migrate
+```
+
 • Iniciar servidor Back-End:
 
 ```bash    
